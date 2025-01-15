@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // UIにAIの返答を表示
         const aiMessageElement = document.createElement("div");
         aiMessageElement.textContent = ai_response;
-        aiMessageElement.className = "ai-message";
+        aiMessageElement.className = "assistant-message";
         chatHistory.appendChild(aiMessageElement);
         chatHistory.scrollTop = chatHistory.scrollHeight;
 
