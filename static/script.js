@@ -4,14 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeButton = document.querySelector(".close-button");
 
   // モーダルの閉じるボタンをクリックで非表示
-  addBotModal.querySelector(".close-button").addEventListener("click", () => {
-    addBotModal.style.display = "none";
-  });
+  for (const button of document.querySelectorAll(".modal .close-button")) {
+    button.addEventListener("click", () => {
+      button.closest(".modal").style.display = "none";
+    });
+  }
 
   // モーダルの外をクリックで非表示
   window.addEventListener("click", (event) => {
-    if (event.target === addBotModal) {
-      addBotModal.style.display = "none";
+    if (event.target.classList.contains("modal")) {
+      event.target.style.display = "none";
     }
   });
 
