@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function selectBot(bot) {
+    const chatHistory = document.getElementById("chat-history");
+
     console.log(`Selected bot: ${bot.name}`);
 
     fetch(`/get_conversation_history/${bot.id}`)
