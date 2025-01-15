@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("/get_settings")
     .then((response) => response.json())
     .then((settings) => {
-      apiKeyInput.value = settings.openai_api_key || "";
-      modelSelect.value = settings.openai_chat_model || "o1-preview";
+      apiKeyInput.value = settings.api_key || "";
+      modelSelect.value = settings.chat_model || "o1-preview";
     })
     .catch((error) => showError(`Error fetching settings: ${error}`));
 
