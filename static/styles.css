@@ -1,3 +1,32 @@
+#add-bot-button {
+  background-color: #28a745; /* 緑色 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#add-bot-button:hover {
+  background-color: #218838;
+}
+
+#save-bot-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#save-bot-button:hover {
+  background-color: #0056b3;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;

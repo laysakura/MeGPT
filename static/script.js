@@ -24,6 +24,30 @@ document.addEventListener("DOMContentLoaded", () => {
     addBotModal.style.display = "block";
   });
 
+  function addBotToSidebar(bot) {
+    const botLink = document.createElement("div");
+    botLink.className = "bot-link";
+
+    const botName = document.createElement("a");
+    botName.className = "bot-link";
+    botName.href = "#";
+    botName.textContent = bot.name;
+    botName.addEventListener("click", () => {
+      selectBot(bot);
+    });
+    botLink.appendChild(botName);
+
+    const botSettingsButton = document.createElement("button");
+    botSettingsButton.className = "bot-settings-button";
+    botSettingsButton.textContent = "設定";
+    botSettingsButton.addEventListener("click", () => {
+      openBotSettingsModal(bot);
+    });
+    botLink.appendChild(botSettingsButton);
+
+    botList.appendChild(botLink);
+  }
+
   saveBotButton.addEventListener("click", () => {
     const botName = botNameInput.value.trim();
     const systemPrompt = systemPromptInput.value.trim();
@@ -44,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.status === "Bot added") {
+          if (data.status === "Bot created") {
             alert("ボットが追加されました");
             location.reload(); // ページをリロードして新しいボットを表示
           }
@@ -71,13 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((response) => response.json())
     .then((bots) => {
       for (const bot of bots) {
-        const botElement = document.createElement("div");
-        botElement.className = "bot-link";
-        botElement.textContent = bot.name;
-        botElement.addEventListener("click", () => {
-          selectBot(bot);
-        });
-        botList.appendChild(botElement);
+        addBotToSidebar(bot);
       }
     })
     .catch((error) => showError(`Error fetching bots: ${error}`));
@@ -200,6 +218,18 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) =>
         showError(`Error fetching conversation history: ${error}`)
       );
+  }
+
+  function openBotSettingsModal(bot) {
+    const botSettingsModal = document.getElementById("bot-settings-modal");
+    const botNameInput = document.getElementById("bot-name-input");
+    const systemPromptInput = document.getElementById("system-prompt-input");
+    const botResponseInput = document.getElementById("bot-response-input");
+    const saveBotSettingsButton = document.getElementById(
+      "save-bot-settings-button"
+    );
+
+    console.log(`Opening settings for bot: ${bot.name}`);
   }
 
   function sendMessage() {
