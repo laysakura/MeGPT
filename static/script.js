@@ -40,51 +40,51 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage();
     }
   });
-});
 
-// APIキーを保存するボタンをクリックでサーバーに送信
-saveSettingsButton.addEventListener("click", () => {
-  const apiKey = apiKeyInput.value.trim();
-  const model = document.getElementById("model-select").value;
-  if (apiKey && model) {
-    fetch("/save_settings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        openai_api_key: apiKey,
-        openai_chat_model: model,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "API key saved") {
-          alert("APIキーが保存されました");
-          settingsModal.style.display = "none";
-        }
+  // APIキーを保存するボタンをクリックでサーバーに送信
+  saveSettingsButton.addEventListener("click", () => {
+    const apiKey = apiKeyInput.value.trim();
+    const model = document.getElementById("model-select").value;
+    if (apiKey && model) {
+      fetch("/save_settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          openai_api_key: apiKey,
+          openai_chat_model: model,
+        }),
       })
-      .catch((error) => {
-        showError(`Error: ${error}`);
-      });
-  }
-});
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "API key saved") {
+            alert("APIキーが保存されました");
+            settingsModal.style.display = "none";
+          }
+        })
+        .catch((error) => {
+          showError(`Error: ${error}`);
+        });
+    }
+  });
 
-// 設定ボタンをクリックで設定画面を表示
-settingsButton.addEventListener("click", () => {
-  settingsModal.style.display = "block";
-});
+  // 設定ボタンをクリックで設定画面を表示
+  settingsButton.addEventListener("click", () => {
+    settingsModal.style.display = "block";
+  });
 
-// 設定画面の閉じるボタンをクリックで非表示
-closeButton.addEventListener("click", () => {
-  settingsModal.style.display = "none";
-});
-
-// 設定画面の外をクリックで非表示
-window.addEventListener("click", (event) => {
-  if (event.target === settingsModal) {
+  // 設定画面の閉じるボタンをクリックで非表示
+  closeButton.addEventListener("click", () => {
     settingsModal.style.display = "none";
-  }
+  });
+
+  // 設定画面の外をクリックで非表示
+  window.addEventListener("click", (event) => {
+    if (event.target === settingsModal) {
+      settingsModal.style.display = "none";
+    }
+  });
 });
 
 function sendMessage() {
@@ -147,11 +147,15 @@ function sendMessage() {
 function showError(message) {
   const flashMessage = document.getElementById("flash-message");
 
-  flashMessage.innerHTML = `${message}<span id="close-flash">&times;</span>`;
-  // フラッシュメッセージの閉じるボタンのイベントリスナーを追加
-  document.getElementById("close-flash").addEventListener("click", () => {
-    document.getElementById("flash-message").style.display = "none";
+  flashMessage.textContent = message;
+
+  const closeFlash = document.createElement("span");
+  closeFlash.id = "close-flash";
+  closeFlash.textContent = "×";
+  closeFlash.addEventListener("click", () => {
+    flashMessage.style.display = "none";
   });
+  flashMessage.appendChild(closeFlash);
 
   flashMessage.style.display = "block";
 }
