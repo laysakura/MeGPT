@@ -20,13 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetch("/get_conversation_history")
     .then((response) => response.json())
-    .then((history) => {
-      history.forEach((entry) => {
+    .then((data) => {
+      const history = data.history;
+      for (const conversation of history) {
+        // ユーザーのメッセージを表示
         const messageElement = document.createElement("div");
-        messageElement.textContent = entry.user_input;
+        messageElement.textContent = conversation.message.user_input;
         messageElement.className = "user-message";
         chatHistory.appendChild(messageElement);
-      });
+
+        // AIの返答を表示
+        const aiResponseElement = document.createElement("div");
+        aiResponseElement.textContent = conversation.ai_response;
+        aiResponseElement.className = "assistant-message";
+        chatHistory.appendChild(aiResponseElement);
+      }
       chatHistory.scrollTop = chatHistory.scrollHeight;
     })
     .catch((error) =>
