@@ -10,7 +10,7 @@
 uv venv ; source venv/bin/activate
 uv sync
 
-uv run uvicorn main:app --host 127.0.0.1 --port 12345
+uv run uvicorn src.megpt.main:app --host 127.0.0.1 --port 12345
 ```
 
 このコマンドを実行すると、サーバーが`localhost:12345`で起動します。
