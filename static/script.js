@@ -87,16 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function textToHTML(text) {
+    return text.replace(/\x0A/g, "<br>");
+  }
+
   function showUserMessage(messageText) {
     const messageElement = document.createElement("div");
-    messageElement.textContent = messageText;
+    messageElement.innerHTML = textToHTML(messageText); // NOTE: stored-XSS
     messageElement.className = "user-message";
     chatHistory.appendChild(messageElement);
   }
 
   function showAiResponse(aiResponseText) {
     const aiResponseElement = document.createElement("div");
-    aiResponseElement.textContent = aiResponseText;
+    aiResponseElement.innerHTML = textToHTML(aiResponseText); // NOTE: stored-XSS
     aiResponseElement.className = "assistant-message";
     chatHistory.appendChild(aiResponseElement);
   }
