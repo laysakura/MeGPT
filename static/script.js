@@ -23,17 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       const history = data.history;
       for (const conversation of history) {
-        // ユーザーのメッセージを表示
-        const messageElement = document.createElement("div");
-        messageElement.textContent = conversation.message.user_input;
-        messageElement.className = "user-message";
-        chatHistory.appendChild(messageElement);
-
-        // AIの返答を表示
-        const aiResponseElement = document.createElement("div");
-        aiResponseElement.textContent = conversation.ai_response;
-        aiResponseElement.className = "assistant-message";
-        chatHistory.appendChild(aiResponseElement);
+        showUserMessage(conversation.message.user_input);
+        showAiResponse(conversation.ai_response);
       }
       chatHistory.scrollTop = chatHistory.scrollHeight;
     })
@@ -96,6 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function showUserMessage(messageText) {
+    const messageElement = document.createElement("div");
+    messageElement.textContent = messageText;
+    messageElement.className = "user-message";
+    chatHistory.appendChild(messageElement);
+  }
+
+  function showAiResponse(aiResponseText) {
+    const aiResponseElement = document.createElement("div");
+    aiResponseElement.textContent = aiResponseText;
+    aiResponseElement.className = "assistant-message";
+    chatHistory.appendChild(aiResponseElement);
+  }
+
   function sendMessage() {
     const message = userInput.value.trim();
 
@@ -103,12 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ユーザーのメッセージを表示
-    const messageElement = document.createElement("div");
-    messageElement.className = "user-message";
-    chatHistory.appendChild(messageElement);
-    userInput.value = "";
+    showUserMessage(message);
     chatHistory.scrollTop = chatHistory.scrollHeight;
+    userInput.value = "";
 
     // APIを使ってAIと会話
     fetch("/chat", {
@@ -122,10 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         const ai_response = data.ai_response;
 
-        // UIにAIの返答を表示
-        const aiMessageElement = document.createElement("div");
-        aiMessageElement.className = "assistant-message";
-        chatHistory.appendChild(aiMessageElement);
+        showAiResponse(ai_response);
         chatHistory.scrollTop = chatHistory.scrollHeight;
 
         // ユーザーのメッセージ・AIの返答をサーバーに保存
