@@ -42,8 +42,6 @@ async def chat(message: Message):
     client = LlmClient(Settings.from_db())
     conversation = client.chat(history, message)
 
-    history.insert_conversation(conversation)
-
     return JSONResponse(content={"ai_response": conversation.ai_response}, status_code=200)
 
 
