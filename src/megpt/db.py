@@ -14,9 +14,9 @@ def init_db():
     with conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS settings (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 key TEXT NOT NULL,
-                value TEXT NOT NULL
+                value TEXT NOT NULL,
+                PRIMARY KEY (key)
             )
         """)
         conn.execute("""

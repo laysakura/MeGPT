@@ -46,10 +46,12 @@ class Settings(BaseModel):
     def save(self):
         conn = get_db_connection()
         with conn:
-            conn.execute(
+            conn.executemany(
                 "INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
-                ("openai_api_key", self.api_key),
-                ("openai_chat_model", self.chat_model),
+                [
+                    ("openai_api_key", self.api_key),
+                    ("openai_chat_model", self.chat_model),
+                ],
             )
         conn.close()
 

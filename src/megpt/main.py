@@ -24,7 +24,7 @@ async def get_conversation_history():
 @app.post("/save_settings")
 async def save_settings(settings: Settings):
     settings.save()
-    return JSONResponse(content={"status": "API key saved"}, status_code=200)
+    return JSONResponse(content={"status": "Settings saved"}, status_code=200)
 
 
 @app.post("/save_conversation")

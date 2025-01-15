@@ -52,20 +52,22 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          openai_api_key: apiKey,
-          openai_chat_model: model,
+          api_key: apiKey,
+          chat_model: model,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.status === "API key saved") {
-            alert("APIキーが保存されました");
+          if (data.status === "Settings saved") {
+            alert("設定が保存されました");
             settingsModal.style.display = "none";
           }
         })
         .catch((error) => {
           showError(`Error: ${error}`);
         });
+    } else {
+      showError("APIキーを入力してください");
     }
   });
 
