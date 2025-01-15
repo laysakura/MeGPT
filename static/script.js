@@ -1,16 +1,21 @@
 // ページロード時の処理
 document.addEventListener("DOMContentLoaded", () => {
-  const userInput = document.getElementById("user-input");
-  const modelSelect = document.getElementById("model-select");
-  const submitButton = document.getElementById("submit-button");
-  const chatHistory = document.getElementById("chat-history");
-  const settingsButton = document.getElementById("settings-button");
-  const settingsModal = document.getElementById("settings-modal");
+  // ============ 共通の操作 =======================
   const closeButton = document.querySelector(".close-button");
-  const apiKeyInput = document.getElementById("api-key-input");
-  const saveSettingsButton = document.getElementById("save-settings-button");
-  const clearHistoryButton = document.getElementById("clear-history-button");
 
+  // モーダルの閉じるボタンをクリックで非表示
+  addBotModal.querySelector(".close-button").addEventListener("click", () => {
+    addBotModal.style.display = "none";
+  });
+
+  // モーダルの外をクリックで非表示
+  window.addEventListener("click", (event) => {
+    if (event.target === addBotModal) {
+      addBotModal.style.display = "none";
+    }
+  });
+
+  // ============ サイドバーのボット操作 ============
   const botList = document.getElementById("bot-list");
   const addBotButton = document.getElementById("add-bot-button");
   const addBotModal = document.getElementById("add-bot-modal");
@@ -19,6 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const systemPromptInput = document.getElementById("system-prompt-input");
   const botResponseInput = document.getElementById("bot-response-input");
   const botSettingsButton = document.getElementById("bot-settings-button");
+  const botDetailsLink = document.getElementById("bot-details-link");
+  const botDetails = document.getElementById("bot-details");
+  const selectedBotName = document.getElementById("selected-bot-name");
+  const selectedBotSystemPrompt = document.getElementById(
+    "selected-bot-system-prompt"
+  );
+  const selectedBotResponse = document.getElementById("selected-bot-response");
 
   addBotButton.addEventListener("click", () => {
     addBotModal.style.display = "block";
@@ -46,6 +58,20 @@ document.addEventListener("DOMContentLoaded", () => {
     botLink.appendChild(botSettingsButton);
 
     botList.appendChild(botLink);
+  }
+
+  botDetailsLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    console.log("Bot details link clicked");
+    botDetails.style.display =
+      botDetails.style.display === "none" ? "block" : "none";
+  });
+
+  function updateSelectedBotInfo(bot) {
+    document.getElementById("selected-bot-id").value = bot.id;
+    selectedBotName.textContent = bot.name;
+    selectedBotSystemPrompt.textContent = bot.system_prompt;
+    selectedBotResponse.textContent = bot.response;
   }
 
   saveBotButton.addEventListener("click", () => {
@@ -79,17 +105,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // モーダルの閉じるボタンをクリックで非表示
-  addBotModal.querySelector(".close-button").addEventListener("click", () => {
-    addBotModal.style.display = "none";
-  });
+  // ============ メイン設定 =======================
+  const settingsButton = document.getElementById("settings-button");
+  const settingsModal = document.getElementById("settings-modal");
+  const modelSelect = document.getElementById("model-select");
+  const apiKeyInput = document.getElementById("api-key-input");
+  const saveSettingsButton = document.getElementById("save-settings-button");
+  const clearHistoryButton = document.getElementById("clear-history-button");
 
-  // モーダルの外をクリックで非表示
-  window.addEventListener("click", (event) => {
-    if (event.target === addBotModal) {
-      addBotModal.style.display = "none";
-    }
-  });
+  // ============ チャット画面の操作 =================
+  const userInput = document.getElementById("user-input");
+  const submitButton = document.getElementById("submit-button");
+  const chatHistory = document.getElementById("chat-history");
 
   fetch("/get_bots")
     .then((response) => response.json())
