@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   submitButton.addEventListener("click", sendMessage);
   userInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
       sendMessage();
     }
@@ -105,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ユーザーのメッセージを表示
     const messageElement = document.createElement("div");
-    messageElement.textContent = message;
     messageElement.className = "user-message";
     chatHistory.appendChild(messageElement);
     userInput.value = "";
@@ -125,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // UIにAIの返答を表示
         const aiMessageElement = document.createElement("div");
-        aiMessageElement.textContent = ai_response;
         aiMessageElement.className = "assistant-message";
         chatHistory.appendChild(aiMessageElement);
         chatHistory.scrollTop = chatHistory.scrollHeight;
