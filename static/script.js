@@ -87,77 +87,80 @@ document.addEventListener("DOMContentLoaded", () => {
       settingsModal.style.display = "none";
     }
   });
-});
 
-function sendMessage() {
-  const message = userInput.value.trim();
+  function sendMessage() {
+    const message = userInput.value.trim();
 
-  if (!message) {
-    return;
+    if (!message) {
+      return;
+    }
+
+    // ユーザーのメッセージを表示
+    const messageElement = document.createElement("div");
+    messageElement.textContent = message;
+    messageElement.className = "user-message";
+    chatHistory.appendChild(messageElement);
+    userInput.value = "";
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+    // APIを使ってAIと会話
+    fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ input_role: "user", user_input: message }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const ai_response = data.ai_response;
+
+        // UIにAIの返答を表示
+        const aiMessageElement = document.createElement("div");
+        aiMessageElement.textContent = ai_response;
+        aiMessageElement.className = "ai-message";
+        chatHistory.appendChild(aiMessageElement);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // ユーザーのメッセージ・AIの返答をサーバーに保存
+        fetch("/save_conversation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: { input_role: "user", user_input: message },
+            ai_response,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              console.log("Message saved successfully");
+            }
+          })
+          .catch((error) => {
+            showError(`Error saving message: ${error}`);
+          });
+      })
+      .catch((error) => {
+        showError(`Error fetching AI response: ${error}`);
+      });
   }
 
-  // ユーザーのメッセージを表示
-  const messageElement = document.createElement("div");
-  messageElement.textContent = message;
-  messageElement.className = "user-message";
-  chatHistory.appendChild(messageElement);
-  userInput.value = "";
-  chatHistory.scrollTop = chatHistory.scrollHeight;
+  function showError(message) {
+    const flashMessage = document.getElementById("flash-message");
 
-  // APIを使ってAIと会話
-  fetch("/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ user_input: message }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      const ai_response = data.ai_response;
+    flashMessage.textContent = message;
 
-      // UIにAIの返答を表示
-      const aiMessageElement = document.createElement("div");
-      aiMessageElement.textContent = ai_response;
-      aiMessageElement.className = "ai-message";
-      chatHistory.appendChild(aiMessageElement);
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-
-      // ユーザーのメッセージ・AIの返答をサーバーに保存
-      fetch("/save_conversation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_input: message, ai_response }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            console.log("Message saved successfully");
-          }
-        })
-        .catch((error) => {
-          showError(`Error saving message: ${error}`);
-        });
-    })
-    .catch((error) => {
-      showError(`Error fetching AI response: ${error}`);
+    const closeFlash = document.createElement("span");
+    closeFlash.id = "close-flash";
+    closeFlash.textContent = "×";
+    closeFlash.addEventListener("click", () => {
+      flashMessage.style.display = "none";
     });
-}
+    flashMessage.appendChild(closeFlash);
 
-function showError(message) {
-  const flashMessage = document.getElementById("flash-message");
-
-  flashMessage.textContent = message;
-
-  const closeFlash = document.createElement("span");
-  closeFlash.id = "close-flash";
-  closeFlash.textContent = "×";
-  closeFlash.addEventListener("click", () => {
-    flashMessage.style.display = "none";
-  });
-  flashMessage.appendChild(closeFlash);
-
-  flashMessage.style.display = "block";
-}
+    flashMessage.style.display = "block";
+  }
+});

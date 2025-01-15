@@ -18,7 +18,7 @@ async def get_settings():
 @app.get("/get_conversation_history")
 async def get_conversation_history():
     history = ConversationHistory.from_db()
-    return JSONResponse(content=history.history, status_code=200)
+    return JSONResponse(content=history.to_json(), status_code=200)
 
 
 @app.post("/save_settings")

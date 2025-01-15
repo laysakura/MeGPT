@@ -92,3 +92,6 @@ class ConversationHistory(BaseModel):
                 (conversation.message.input_role, conversation.message.user_input, conversation.ai_response),
             )
         conn.close()
+
+    def to_json(self) -> dict[str, str]:
+        return self.model_dump()
