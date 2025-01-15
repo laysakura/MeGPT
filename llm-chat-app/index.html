@@ -8,7 +8,21 @@
   </head>
   <body>
     <div id="sidebar">
-      <!-- 左サイドバー（現在は空） -->
+      <button id="add-bot-button">ボットを追加</button>
+      <div id="bot-list">
+        <div class="bot-link">
+          <a href="#" class="bot-name">AI Bot 1</a>
+          <button class="bot-settings-button">設定</button>
+        </div>
+        <div class="bot-link">
+          <a href="#" class="bot-name">AI Bot 2</a>
+          <button class="bot-settings-button">設定</button>
+        </div>
+        <div class="bot-link">
+          <a href="#" class="bot-name">AI Bot 3</a>
+          <button class="bot-settings-button">設定</button>
+        </div>
+      </div>
     </div>
     <div id="flash-message">
       <span id="close-flash">&times;</span>
@@ -26,6 +40,27 @@
         <button id="clear-history-button">会話履歴を削除</button>
       </div>
     </div>
+    <div id="add-bot-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>ボットを追加</h2>
+        <label for="bot-name-input">ボットの名前:</label>
+        <input
+          type="text"
+          id="bot-name-input"
+          placeholder="ボットの名前を入力"
+        />
+        <label for="system-prompt-input">システムプロンプト:</label>
+        <textarea
+          id="system-prompt-input"
+          placeholder="システムプロンプトを入力"
+        ></textarea>
+        <label for="bot-response-input">応答:</label>
+        <textarea id="bot-response-input" placeholder="応答を入力"></textarea>
+        <button id="save-bot-button">ボットを保存</button>
+      </div>
+    </div>
+
     <div id="settings-modal" class="modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>

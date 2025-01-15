@@ -11,6 +11,42 @@ class InputRoleEnum(str, enum.Enum):
     SYSTEM = "system"
 
 
+class Bot(BaseModel):
+    id: int | None
+    name: str
+    system_prompt: str
+    response: str
+
+    @staticmethod
+    def from_db() -> list["Bot"]:
+        conn = get_db_connection()
+        cursor = conn.execute("SELECT id, name, system_prompt, response FROM bots")
+        bots = [
+            Bot(id=row["id"], name=row["name"], system_prompt=row["system_prompt"], response=row["response"])
+            for row in cursor.fetchall()
+        ]
+        conn.close()
+        return bots
+
+    def save(self):
+        conn = get_db_connection()
+        with conn:
+            conn.execute(
+                "INSERT INTO bots (name, system_prompt, response) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET name=excluded.name, system_prompt=excluded.system_prompt, response=excluded.response",
+                (self.name, self.system_prompt, self.response),
+            )
+        conn.close()
+
+    def update(self):
+        conn = get_db_connection()
+        with conn:
+            conn.execute(
+                "UPDATE bots SET name = ?, system_prompt = ?, response = ? WHERE id = ?",
+                (self.name, self.system_prompt, self.response, self.id),
+            )
+        conn.close()
+
+
 class Message(BaseModel):
     input_role: InputRoleEnum
     user_input: str
@@ -60,13 +96,15 @@ class Settings(BaseModel):
 
 
 class ConversationHistory(BaseModel):
+    bot_id: int
     history: list[Conversation]
 
     @staticmethod
-    def from_db() -> "ConversationHistory":
+    def from_db(bot_id: int) -> "ConversationHistory":
         conn = get_db_connection()
         cursor = conn.execute(
-            "SELECT input_role, user_input, response FROM conversation_history ORDER BY timestamp ASC"
+            "SELECT input_role, user_input, response FROM conversations WHERE bot_id = ? ORDER BY timestamp ASC",
+            [bot_id],
         )
         history = [
             Conversation(
@@ -76,13 +114,13 @@ class ConversationHistory(BaseModel):
         ]
         conn.close()
 
-        return ConversationHistory(history=history)
+        return ConversationHistory(history=history, bot_id=bot_id)
 
     @staticmethod
-    def clear_from_db():
+    def clear_from_db(bot_id: int):
         conn = get_db_connection()
         with conn:
-            conn.execute("DELETE FROM conversation_history")
+            conn.execute("DELETE FROM conversations WHERE bot_id = ?", [bot_id])
         conn.close()
 
     def get_openai_messages(self) -> list[dict[str, str]]:
@@ -95,8 +133,13 @@ class ConversationHistory(BaseModel):
         conn = get_db_connection()
         with conn:
             conn.execute(
-                "INSERT INTO conversation_history (input_role, user_input, response) VALUES (?, ?, ?)",
-                (conversation.message.input_role, conversation.message.user_input, conversation.ai_response),
+                "INSERT INTO conversations (bot_id, input_role, user_input, response) VALUES (?, ?, ?, ?)",
+                (
+                    self.bot_id,
+                    conversation.message.input_role,
+                    conversation.message.user_input,
+                    conversation.ai_response,
+                ),
             )
         conn.close()
 

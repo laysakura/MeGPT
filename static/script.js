@@ -11,6 +11,77 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveSettingsButton = document.getElementById("save-settings-button");
   const clearHistoryButton = document.getElementById("clear-history-button");
 
+  const botList = document.getElementById("bot-list");
+  const addBotButton = document.getElementById("add-bot-button");
+  const addBotModal = document.getElementById("add-bot-modal");
+  const saveBotButton = document.getElementById("save-bot-button");
+  const botNameInput = document.getElementById("bot-name-input");
+  const systemPromptInput = document.getElementById("system-prompt-input");
+  const botResponseInput = document.getElementById("bot-response-input");
+  const botSettingsButton = document.getElementById("bot-settings-button");
+
+  addBotButton.addEventListener("click", () => {
+    addBotModal.style.display = "block";
+  });
+
+  saveBotButton.addEventListener("click", () => {
+    const botName = botNameInput.value.trim();
+    const systemPrompt = systemPromptInput.value.trim();
+    const botResponse = botResponseInput.value.trim();
+
+    if (botName && systemPrompt && botResponse) {
+      fetch("/create_bot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: 0, // unused
+          name: botName,
+          system_prompt: systemPrompt,
+          response: botResponse,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "Bot added") {
+            alert("ボットが追加されました");
+            location.reload(); // ページをリロードして新しいボットを表示
+          }
+        })
+        .catch((error) => showError(`Error adding bot: ${error}`));
+    } else {
+      showError("すべてのフィールドを入力してください");
+    }
+  });
+
+  // モーダルの閉じるボタンをクリックで非表示
+  addBotModal.querySelector(".close-button").addEventListener("click", () => {
+    addBotModal.style.display = "none";
+  });
+
+  // モーダルの外をクリックで非表示
+  window.addEventListener("click", (event) => {
+    if (event.target === addBotModal) {
+      addBotModal.style.display = "none";
+    }
+  });
+
+  fetch("/get_bots")
+    .then((response) => response.json())
+    .then((bots) => {
+      for (const bot of bots) {
+        const botElement = document.createElement("div");
+        botElement.className = "bot-link";
+        botElement.textContent = bot.name;
+        botElement.addEventListener("click", () => {
+          selectBot(bot);
+        });
+        botList.appendChild(botElement);
+      }
+    })
+    .catch((error) => showError(`Error fetching bots: ${error}`));
+
   fetch("/get_settings")
     .then((response) => response.json())
     .then((settings) => {
@@ -19,20 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((error) => showError(`Error fetching settings: ${error}`));
 
-  fetch("/get_conversation_history")
-    .then((response) => response.json())
-    .then((data) => {
-      const history = data.history;
-      for (const conversation of history) {
-        showUserMessage(conversation.message.user_input);
-        showAiResponse(conversation.ai_response);
-      }
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    })
-    .catch((error) =>
-      showError(`Error fetching conversation history: ${error}`)
-    );
-
+  // 会話を送信するキー・ボタンのイベントリスナーを追加
   submitButton.addEventListener("click", sendMessage);
   userInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
@@ -124,6 +182,24 @@ document.addEventListener("DOMContentLoaded", () => {
     aiResponseElement.innerHTML = textToHTML(aiResponseText); // NOTE: stored-XSS
     aiResponseElement.className = "assistant-message";
     chatHistory.appendChild(aiResponseElement);
+  }
+
+  function selectBot(bot) {
+    console.log(`Selected bot: ${bot.name}`);
+
+    fetch(`/get_conversation_history/${bot.id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const history = data.history;
+        for (const conversation of history) {
+          showUserMessage(conversation.message.user_input);
+          showAiResponse(conversation.ai_response);
+        }
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      })
+      .catch((error) =>
+        showError(`Error fetching conversation history: ${error}`)
+      );
   }
 
   function sendMessage() {

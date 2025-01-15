@@ -13,6 +13,32 @@ body {
     padding: 10px;
 }
 
+.bot-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+
+.bot-name {
+    font-weight: bold;
+}
+
+.bot-settings-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.bot-settings-button:hover {
+    background-color: #0056b3;
+}
+
 #main-container {
     flex: 1;
     display: flex;
