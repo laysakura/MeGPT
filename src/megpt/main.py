@@ -32,6 +32,8 @@ async def save_conversation(conversation: Conversation):
     history = ConversationHistory.from_db()
     history.insert_conversation(conversation)
 
+    return JSONResponse(content={"status": "success"}, status_code=200)
+
 
 @app.post("/chat")
 async def chat(message: Message):
