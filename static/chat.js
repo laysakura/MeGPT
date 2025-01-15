@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit-button");
   const chatHistory = document.getElementById("chat-history");
   const clearHistoryButton = document.getElementById("clear-history-button");
+  const selectedBotId = document.getElementById("selected-bot-id");
 
   // 会話を送信するキー・ボタンのイベントリスナーを追加
   submitButton.addEventListener("click", sendMessage);
@@ -37,23 +38,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function sendMessage() {
+    const botIdStr = selectedBotId.value;
     const message = userInput.value.trim();
 
-    if (!message) {
+    if (!message || !botIdStr) {
       return;
     }
+    const botId = Number.parseInt(botIdStr, 10);
 
     showUserMessage(message);
     chatHistory.scrollTop = chatHistory.scrollHeight;
     userInput.value = "";
 
     // APIを使ってAIと会話
-    fetch("/chat", {
+    fetch(`/chat/${botId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ input_role: "user", user_input: message }),
+      body: JSON.stringify({
+        input_role: "user",
+        user_input: message,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {

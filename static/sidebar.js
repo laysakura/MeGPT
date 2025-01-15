@@ -11,11 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const botResponseInput = document.getElementById("bot-response-input");
   const botDetailsLink = document.getElementById("bot-details-link");
   const botDetails = document.getElementById("bot-details");
-  const selectedBotName = document.getElementById("selected-bot-name");
-  const selectedBotSystemPrompt = document.getElementById(
-    "selected-bot-system-prompt"
-  );
-  const selectedBotResponse = document.getElementById("selected-bot-response");
 
   addBotButton.addEventListener("click", () => {
     addBotModal.style.display = "block";
@@ -52,6 +47,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  botDetailsLink.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    updateSelectedBotInfo({
+      id: document.getElementById("selected-bot-id").value,
+      name: selectedBotName.textContent,
+      system_prompt: selectedBotSystemPrompt.textContent,
+      response: selectedBotResponse.textContent,
+    });
+
+    botDetails.style.display =
+      botDetails.style.display === "none" ? "block" : "none";
+  });
+
   function addBotToSidebar(bot) {
     const botLink = document.createElement("div");
     botLink.className = "bot-link";
@@ -60,7 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
     botName.className = "bot-link";
     botName.href = "#";
     botName.textContent = bot.name;
+    botLink.dataset.id = bot.id;
+    botLink.dataset.name = bot.name;
+    botLink.dataset.systemPrompt = bot.system_prompt;
+    botLink.dataset.response = bot.response;
+
     botName.addEventListener("click", () => {
+      updateSelectedBotInfo({
+        id: botLink.dataset.id,
+        name: botLink.dataset.name,
+        system_prompt: botLink.dataset.systemPrompt,
+        response: botLink.dataset.response,
+      });
       selectBot(bot);
     });
     botLink.appendChild(botName);
@@ -75,12 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     botList.appendChild(botLink);
   }
-
-  botDetailsLink.addEventListener("click", (event) => {
-    event.preventDefault();
-    botDetails.style.display =
-      botDetails.style.display === "none" ? "block" : "none";
-  });
 
   function selectBot(bot) {
     const chatHistory = document.getElementById("chat-history");
@@ -103,18 +117,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openBotSettingsModal(bot) {
-    const botSettingsModal = document.getElementById("bot-settings-modal");
-    const botNameInput = document.getElementById("bot-name-input");
-    const systemPromptInput = document.getElementById("system-prompt-input");
-    const botResponseInput = document.getElementById("bot-response-input");
-    const saveBotSettingsButton = document.getElementById(
-      "save-bot-settings-button"
-    );
-
     console.log(`Opening settings for bot: ${bot.name}`);
   }
 
   function updateSelectedBotInfo(bot) {
+    const selectedBotName = document.getElementById("selected-bot-name");
+    const selectedBotSystemPrompt = document.getElementById(
+      "selected-bot-system-prompt"
+    );
+    const selectedBotResponse = document.getElementById(
+      "selected-bot-response"
+    );
+
     document.getElementById("selected-bot-id").value = bot.id;
     selectedBotName.textContent = bot.name;
     selectedBotSystemPrompt.textContent = bot.system_prompt;

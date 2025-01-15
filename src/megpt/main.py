@@ -53,7 +53,7 @@ async def save_conversation(bot_id: int, conversation: Conversation):
     return JSONResponse(content={"status": "success"}, status_code=200)
 
 
-@app.post("/chat")
+@app.post("/chat/{bot_id}")
 async def chat(bot_id: int, message: Message):
     history = ConversationHistory.from_db(bot_id)
 
