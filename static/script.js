@@ -1,3 +1,4 @@
+// ページロード時の処理
 document.addEventListener("DOMContentLoaded", () => {
   const userInput = document.getElementById("user-input");
   const modelSelect = document.getElementById("model-select");
@@ -9,14 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const apiKeyInput = document.getElementById("api-key-input");
   const saveSettingsButton = document.getElementById("save-settings-button");
 
-  // ページロード時に設定と会話履歴を取得
   fetch("/get_settings")
     .then((response) => response.json())
     .then((settings) => {
       apiKeyInput.value = settings.openai_api_key || "";
       modelSelect.value = settings.openai_chat_model || "o1-preview";
     })
-    .catch((error) => console.error("Error fetching settings:", error));
+    .catch((error) => showError(`Error fetching settings: ${error}`));
 
   fetch("/get_conversation_history")
     .then((response) => response.json())
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       chatHistory.scrollTop = chatHistory.scrollHeight;
     })
     .catch((error) =>
-      console.error("Error fetching conversation history:", error)
+      showError(`Error fetching conversation history: ${error}`)
     );
 
   submitButton.addEventListener("click", sendMessage);
@@ -38,12 +38,96 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       sendMessage();
-      fetch("/save_message", {
+    }
+  });
+});
+
+// APIキーを保存するボタンをクリックでサーバーに送信
+saveSettingsButton.addEventListener("click", () => {
+  const apiKey = apiKeyInput.value.trim();
+  const model = document.getElementById("model-select").value;
+  if (apiKey && model) {
+    fetch("/save_settings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        openai_api_key: apiKey,
+        openai_chat_model: model,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "API key saved") {
+          alert("APIキーが保存されました");
+          settingsModal.style.display = "none";
+        }
+      })
+      .catch((error) => {
+        showError(`Error: ${error}`);
+      });
+  }
+});
+
+// 設定ボタンをクリックで設定画面を表示
+settingsButton.addEventListener("click", () => {
+  settingsModal.style.display = "block";
+});
+
+// 設定画面の閉じるボタンをクリックで非表示
+closeButton.addEventListener("click", () => {
+  settingsModal.style.display = "none";
+});
+
+// 設定画面の外をクリックで非表示
+window.addEventListener("click", (event) => {
+  if (event.target === settingsModal) {
+    settingsModal.style.display = "none";
+  }
+});
+
+function sendMessage() {
+  const message = userInput.value.trim();
+
+  if (!message) {
+    return;
+  }
+
+  // ユーザーのメッセージを表示
+  const messageElement = document.createElement("div");
+  messageElement.textContent = message;
+  messageElement.className = "user-message";
+  chatHistory.appendChild(messageElement);
+  userInput.value = "";
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  // APIを使ってAIと会話
+  fetch("/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_input: message }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const ai_response = data.ai_response;
+
+      // UIにAIの返答を表示
+      const aiMessageElement = document.createElement("div");
+      aiMessageElement.textContent = ai_response;
+      aiMessageElement.className = "ai-message";
+      chatHistory.appendChild(aiMessageElement);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+
+      // ユーザーのメッセージ・AIの返答をサーバーに保存
+      fetch("/save_conversation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user_input: message }),
+        body: JSON.stringify({ user_input: message, ai_response }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -52,62 +136,22 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         })
         .catch((error) => {
-          console.error("Error saving message:", error);
+          showError(`Error saving message: ${error}`);
         });
-    }
+    })
+    .catch((error) => {
+      showError(`Error fetching AI response: ${error}`);
+    });
+}
+
+function showError(message) {
+  const flashMessage = document.getElementById("flash-message");
+
+  flashMessage.innerHTML = `${message}<span id="close-flash">&times;</span>`;
+  // フラッシュメッセージの閉じるボタンのイベントリスナーを追加
+  document.getElementById("close-flash").addEventListener("click", () => {
+    document.getElementById("flash-message").style.display = "none";
   });
 
-  // APIキーを保存するボタンをクリックでサーバーに送信
-  saveSettingsButton.addEventListener("click", () => {
-    const apiKey = apiKeyInput.value.trim();
-    const model = document.getElementById("model-select").value;
-    if (apiKey && model) {
-      fetch("/save_settings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ api_key: apiKey, model: model }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "API key saved") {
-            alert("APIキーが保存されました");
-            settingsModal.style.display = "none";
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
-  });
-
-  // 設定ボタンをクリックで設定画面を表示
-  settingsButton.addEventListener("click", () => {
-    settingsModal.style.display = "block";
-  });
-
-  // 設定画面の閉じるボタンをクリックで非表示
-  closeButton.addEventListener("click", () => {
-    settingsModal.style.display = "none";
-  });
-
-  // 設定画面の外をクリックで非表示
-  window.addEventListener("click", (event) => {
-    if (event.target === settingsModal) {
-      settingsModal.style.display = "none";
-    }
-  });
-
-  function sendMessage() {
-    const message = userInput.value.trim();
-    if (message) {
-      const messageElement = document.createElement("div");
-      messageElement.textContent = message;
-      messageElement.className = "user-message";
-      chatHistory.appendChild(messageElement);
-      userInput.value = "";
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
-  }
-});
+  flashMessage.style.display = "block";
+}

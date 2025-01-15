@@ -126,3 +126,22 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+#flash-message {
+    display: none;
+    background-color: rgba(255, 128, 128, 0.8);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+#close-flash {
+    cursor: pointer;
+    float: right;
+    margin-right: 30px;
+}

@@ -12,6 +12,7 @@ authors = [{ name = "Sho Nakatani", email = "lay.sakura@gmail.com" }]
 dependencies = [
     "fastapi>=0.115.6",
     "openai>=1.59.7",
+    "pydantic>=2.10.5",
     "uvicorn>=0.34.0",
 ]
 
