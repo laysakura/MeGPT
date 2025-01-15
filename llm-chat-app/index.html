@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Chat App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="sidebar">
+      <!-- 左サイドバー（現在は空） -->
+    </div>
+    <div id="main-container">
+      <div id="settings-link">
+        <a href="#" id="settings-button">設定</a>
+      </div>
+      <div id="chat-container">
+        <div id="chat-history">
+          <!-- 会話履歴がここに表示されます -->
+        </div>
+        <textarea id="user-input" placeholder="メッセージを入力..."></textarea>
+        <button id="submit-button">送信</button>
+      </div>
+    </div>
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>設定</h2>
+        <label for="api-key">OpenAI APIキー:</label>
+        <input type="text" id="api-key" placeholder="APIキーを入力" />
+        <label for="model-select">使用するモデル:</label>
+        <select id="model-select">
+          <option value="o1-preview">o1-preview</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+        </select>
+        <button id="save-api-key-button">設定を保存</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
