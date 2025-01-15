@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeButton = document.querySelector(".close-button");
   const apiKeyInput = document.getElementById("api-key-input");
   const saveSettingsButton = document.getElementById("save-settings-button");
+  const clearHistoryButton = document.getElementById("clear-history-button");
 
   fetch("/get_settings")
     .then((response) => response.json())
@@ -40,7 +41,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // APIキーを保存するボタンをクリックでサーバーに送信
+  // 会話履歴を削除するボタンのイベントリスナーを追加
+  clearHistoryButton.addEventListener("click", () => {
+    chatHistory.innerHTML = "";
+    fetch("/clear_conversation_history", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          console.log("Conversation history cleared successfully");
+        }
+      })
+      .catch((error) => {
+        showError(`Error clearing conversation history: ${error}`);
+      });
+  });
+
+  // 設定画面の保存ボタンをクリックで設定を保存
   saveSettingsButton.addEventListener("click", () => {
     const apiKey = apiKeyInput.value.trim();
     const model = document.getElementById("model-select").value;

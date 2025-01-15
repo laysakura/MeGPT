@@ -45,6 +45,12 @@ async def chat(message: Message):
     return JSONResponse(content={"ai_response": conversation.ai_response}, status_code=200)
 
 
+@app.post("/clear_conversation_history")
+async def clear_conversation_history():
+    ConversationHistory.clear_from_db()
+    return JSONResponse(content={"status": "success"}, status_code=200)
+
+
 @app.on_event("startup")
 async def startup_event():
     init_db()

@@ -78,6 +78,13 @@ class ConversationHistory(BaseModel):
 
         return ConversationHistory(history=history)
 
+    @staticmethod
+    def clear_from_db():
+        conn = get_db_connection()
+        with conn:
+            conn.execute("DELETE FROM conversation_history")
+        conn.close()
+
     def get_openai_messages(self) -> list[dict[str, str]]:
         return sum([conversation.get_openai_message() for conversation in self.history], [])
 
