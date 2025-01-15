@@ -21,6 +21,37 @@ document.addEventListener("DOMContentLoaded", () => {
     addBotModal.style.display = "block";
   });
 
+  saveBotButton.addEventListener("click", () => {
+    const botName = botNameInput.value.trim();
+    const systemPrompt = systemPromptInput.value.trim();
+    const botResponse = botResponseInput.value.trim();
+
+    if (botName && systemPrompt && botResponse) {
+      fetch("/create_bot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: 0, // unused
+          name: botName,
+          system_prompt: systemPrompt,
+          response: botResponse,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "Bot created") {
+            alert("ボットが追加されました");
+            location.reload(); // ページをリロードして新しいボットを表示
+          }
+        })
+        .catch((error) => showError(`Error adding bot: ${error}`));
+    } else {
+      showError("すべてのフィールドを入力してください");
+    }
+  });
+
   function addBotToSidebar(bot) {
     const botLink = document.createElement("div");
     botLink.className = "bot-link";
@@ -89,37 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedBotSystemPrompt.textContent = bot.system_prompt;
     selectedBotResponse.textContent = bot.response;
   }
-
-  saveBotButton.addEventListener("click", () => {
-    const botName = botNameInput.value.trim();
-    const systemPrompt = systemPromptInput.value.trim();
-    const botResponse = botResponseInput.value.trim();
-
-    if (botName && systemPrompt && botResponse) {
-      fetch("/create_bot", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: 0, // unused
-          name: botName,
-          system_prompt: systemPrompt,
-          response: botResponse,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "Bot created") {
-            alert("ボットが追加されました");
-            location.reload(); // ページをリロードして新しいボットを表示
-          }
-        })
-        .catch((error) => showError(`Error adding bot: ${error}`));
-    } else {
-      showError("すべてのフィールドを入力してください");
-    }
-  });
 
   fetch("/get_bots")
     .then((response) => response.json())
