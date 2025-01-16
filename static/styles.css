@@ -195,12 +195,11 @@ body {
 }
 
 #user-input {
-    width: 100%;
+    width: 98%;
     height: 50px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    resize: none;
 }
 
 #submit-button {
