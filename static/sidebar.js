@@ -98,7 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function selectBot(bot) {
-    ShowConversationHistory(bot.id);
+    const chatHistory = document.getElementById("chat-history");
+    ShowConversationHistory(chatHistory, bot.id);
   }
 
   function openBotSettingsModal(bot) {

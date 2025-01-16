@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    showUserMessage(message);
+    showUserMessage(chatHistory, message);
     chatHistory.scrollTop = chatHistory.scrollHeight;
     userInput.value = "";
 
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         const ai_response = data.ai_response;
 
-        showAiResponse(ai_response);
+        showAiResponse(chatHistory, ai_response);
         chatHistory.scrollTop = chatHistory.scrollHeight;
 
         // ユーザーのメッセージ・AIの返答をサーバーに保存
@@ -101,36 +101,36 @@ document.addEventListener("DOMContentLoaded", () => {
         showError(`Error fetching AI response: ${error}`);
       });
   }
-
-  function showUserMessage(messageText) {
-    const messageElement = document.createElement("div");
-    messageElement.innerHTML = textToHTML(messageText); // NOTE: stored-XSS
-    messageElement.className = "user-message";
-    chatHistory.appendChild(messageElement);
-  }
-
-  function showAiResponse(aiResponseText) {
-    const aiResponseElement = document.createElement("div");
-    aiResponseElement.innerHTML = textToHTML(aiResponseText); // NOTE: stored-XSS
-    aiResponseElement.className = "assistant-message";
-    chatHistory.appendChild(aiResponseElement);
-  }
-
-  function textToHTML(text) {
-    return text.replace(/\x0A/g, "<br>");
-  }
 });
 
-function ShowConversationHistory(botId) {
+function textToHTML(text) {
+  return text.replace(/\x0A/g, "<br>");
+}
+
+function showUserMessage(chatHistoryElem, messageText) {
+  const messageElement = document.createElement("div");
+  messageElement.innerHTML = textToHTML(messageText); // NOTE: stored-XSS
+  messageElement.className = "user-message";
+  chatHistoryElem.appendChild(messageElement);
+}
+
+function showAiResponse(chatHistoryElem, aiResponseText) {
+  const aiResponseElement = document.createElement("div");
+  aiResponseElement.innerHTML = textToHTML(aiResponseText); // NOTE: stored-XSS
+  aiResponseElement.className = "assistant-message";
+  chatHistoryElem.appendChild(aiResponseElement);
+}
+
+function ShowConversationHistory(chatHistoryElem, botId) {
   fetch(`/get_conversation_history/${botId}`)
     .then((response) => response.json())
     .then((data) => {
       const history = data.history;
       for (const conversation of history) {
-        showUserMessage(conversation.message.user_input);
-        showAiResponse(conversation.ai_response);
+        showUserMessage(chatHistoryElem, conversation.message.user_input);
+        showAiResponse(chatHistoryElem, conversation.ai_response);
       }
-      chatHistory.scrollTop = chatHistory.scrollHeight;
+      chatHistoryElem.scrollTop = chatHistoryElem.scrollHeight;
     })
     .catch((error) =>
       ShowError(`Error fetching conversation history: ${error}`)
