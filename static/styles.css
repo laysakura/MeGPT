@@ -9,6 +9,26 @@
   margin-bottom: 10px;
 }
 
+.toggle-window-content-header {
+    color: #333;
+    padding-top: 10px;
+    margin: 5px 0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.bot-detail-pre {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 5px 0;
+}
+
 .toggle-window-title {
     background-color: #76b8ff;
     color: white;
