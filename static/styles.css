@@ -9,15 +9,6 @@
   margin-bottom: 10px;
 }
 
-.toggle-window-content-header {
-    color: #333;
-    padding-top: 10px;
-    margin: 5px 0;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: left;
-}
-
 .bot-detail-pre {
     background-color: #f1f1f1;
     border: 1px solid #ccc;
@@ -226,6 +217,39 @@ body {
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
     padding-top: 60px;
+}
+
+.bot-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.bot-form label {
+    font-weight: bold;
+}
+
+.bot-form input,
+.bot-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.bot-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.bot-form button:hover {
+    background-color: #0056b3;
 }
 
 .modal-content {

@@ -47,42 +47,48 @@
         <button id="clear-history-button">会話履歴を削除</button>
       </div>
     </div>
-    <div id="add-bot-modal" class="modal">
+    <div id="add-bot-modal" class="modal bot-modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
         <h2>ボットを追加</h2>
-        <label for="bot-name-input">ボットの名前:</label>
-        <input
-          type="text"
-          id="bot-name-input"
-          placeholder="ボットの名前を入力"
-        />
-        <label for="system-prompt-input">システムプロンプト:</label>
-        <textarea
-          id="system-prompt-input"
-          placeholder="システムプロンプトを入力"
-        ></textarea>
-        <label for="bot-response-input">応答:</label>
-        <textarea id="bot-response-input" placeholder="応答を入力"></textarea>
-        <button id="save-bot-button">ボットを保存</button>
+
+        <form id="add-bot-form" class="bot-form">
+          <label for="bot-name-input">ボットの名前:</label>
+          <input
+            type="text"
+            id="bot-name-input"
+            placeholder="ボットの名前を入力"
+          />
+          <label for="system-prompt-input">システムプロンプト:</label>
+          <textarea
+            id="system-prompt-input"
+            placeholder="システムプロンプトを入力"
+          ></textarea>
+          <label for="bot-response-input">応答:</label>
+          <textarea id="bot-response-input" placeholder="応答を入力"></textarea>
+          <button id="save-bot-button">ボットを保存</button>
+        </form>
       </div>
     </div>
 
-    <div id="update-bot-modal" class="modal">
+    <div id="update-bot-modal" class="modal bot-modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
         <h2>ボットを更新</h2>
-        <label for="update-bot-modal--bot-name">ボット名:</label>
-        <input type="text" id="update-bot-modal--bot-name" />
-        <label for="update-bot-modal--system-prompt">システムプロンプト:</label>
-        <input type="text" id="update-bot-modal--system-prompt" />
-        <label for="update-bot-modal--bot-response">ボットの応答:</label>
-        <input type="text" id="update-bot-modal--bot-response" />
-        <button id="update-bot-modal--update-bot-button">ボットを更新</button>
+
+        <form id="update-bot-form" class="bot-form">
+          <label for="update-bot-modal--bot-name">ボット名:</label>
+          <input type="text" id="update-bot-modal--bot-name" />
+          <label for="update-bot-modal--system-prompt">システムプロンプト:</label>
+          <textarea id="update-bot-modal--system-prompt"></textarea>
+          <label for="update-bot-modal--bot-response">ボットの応答:</label>
+          <textarea id="update-bot-modal--bot-response"></textarea>
+          <button id="update-bot-modal--update-bot-button">ボットを更新</button>
+        </form>
       </div>
     </div>
 
-    <div id="settings-modal" class="modal">
+    <div id="settings-modal" class="modal bot-modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
         <h2>設定</h2>
