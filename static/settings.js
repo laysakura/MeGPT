@@ -1,4 +1,4 @@
-import { showError } from "./util.js";
+import { ShowError } from "./util.js";
 
 // メイン設定
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         })
         .catch((error) => {
-          showError(`Error: ${error}`);
+          ShowError(`Error: ${error}`);
         });
     } else {
-      showError("APIキーを入力してください");
+      ShowError("APIキーを入力してください");
     }
   });
 
@@ -49,5 +49,5 @@ document.addEventListener("DOMContentLoaded", () => {
       apiKeyInput.value = settings.api_key || "";
       modelSelect.value = settings.chat_model || "o1-preview";
     })
-    .catch((error) => showError(`Error fetching settings: ${error}`));
+    .catch((error) => ShowError(`Error fetching settings: ${error}`));
 });

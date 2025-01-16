@@ -1,4 +1,6 @@
-import { showError } from "./util.js";
+import { ShowError } from "./util.js";
+
+export { ShowConversationHistory };
 
 // チャット画面の操作
 document.addEventListener("DOMContentLoaded", () => {
@@ -6,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit-button");
   const chatHistory = document.getElementById("chat-history");
   const clearHistoryButton = document.getElementById("clear-history-button");
-  const selectedBotId = document.getElementById("selected-bot-id");
 
   // 会話を送信するキー・ボタンのイベントリスナーを追加
   submitButton.addEventListener("click", sendMessage);
@@ -19,8 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 会話履歴を削除するボタンのイベントリスナーを追加
   clearHistoryButton.addEventListener("click", () => {
+    const botId = readBotId();
+
     chatHistory.innerHTML = "";
-    fetch("/clear_conversation_history", {
+    fetch(`/clear_conversation_history/${botId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,18 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .catch((error) => {
-        showError(`Error clearing conversation history: ${error}`);
+        ShowError(`Error clearing conversation history: ${error}`);
       });
   });
 
+  function readBotId() {
+    const selectedBotId = document.getElementById("selected-bot-id").value;
+    return selectedBotId ? Number.parseInt(selectedBotId, 10) : null;
+  }
+
   function sendMessage() {
-    const botIdStr = selectedBotId.value;
+    const botId = readBotId();
     const message = userInput.value.trim();
 
-    if (!message || !botIdStr) {
+    if (!message || !botId) {
+      console.log(`Message: ${message}, Bot ID: ${botId}`);
       return;
     }
-    const botId = Number.parseInt(botIdStr, 10);
 
     showUserMessage(message);
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -111,20 +119,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function textToHTML(text) {
     return text.replace(/\x0A/g, "<br>");
   }
-
-  function showError(message) {
-    const flashMessage = document.getElementById("flash-message");
-
-    flashMessage.textContent = message;
-
-    const closeFlash = document.createElement("span");
-    closeFlash.id = "close-flash";
-    closeFlash.textContent = "×";
-    closeFlash.addEventListener("click", () => {
-      flashMessage.style.display = "none";
-    });
-    flashMessage.appendChild(closeFlash);
-
-    flashMessage.style.display = "block";
-  }
 });
+
+function ShowConversationHistory(botId) {
+  fetch(`/get_conversation_history/${botId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const history = data.history;
+      for (const conversation of history) {
+        showUserMessage(conversation.message.user_input);
+        showAiResponse(conversation.ai_response);
+      }
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    })
+    .catch((error) =>
+      ShowError(`Error fetching conversation history: ${error}`)
+    );
+}

@@ -1,4 +1,5 @@
-import { showError } from "./util.js";
+import { ShowConversationHistory } from "./chat.js";
+import { ShowError } from "./util.js";
 
 // サイドバーのボット操作
 document.addEventListener("DOMContentLoaded", () => {
@@ -41,9 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
             location.reload(); // ページをリロードして新しいボットを表示
           }
         })
-        .catch((error) => showError(`Error adding bot: ${error}`));
+        .catch((error) => ShowError(`Error adding bot: ${error}`));
     } else {
-      showError("すべてのフィールドを入力してください");
+      ShowError("すべてのフィールドを入力してください");
     }
   });
 
@@ -97,23 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function selectBot(bot) {
-    const chatHistory = document.getElementById("chat-history");
-
-    console.log(`Selected bot: ${bot.name}`);
-
-    fetch(`/get_conversation_history/${bot.id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const history = data.history;
-        for (const conversation of history) {
-          showUserMessage(conversation.message.user_input);
-          showAiResponse(conversation.ai_response);
-        }
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-      })
-      .catch((error) =>
-        showError(`Error fetching conversation history: ${error}`)
-      );
+    ShowConversationHistory(bot.id);
   }
 
   function openBotSettingsModal(bot) {

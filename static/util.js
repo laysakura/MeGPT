@@ -1,7 +1,7 @@
-export { showError };
+export { ShowError };
 
 // エラーメッセージを表示する共通関数
-function showError(message) {
+function ShowError(message) {
   const flashMessage = document.getElementById("flash-message");
 
   flashMessage.textContent = message;
