@@ -120,7 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function textToHTML(text) {
-  return text.replace(/\x0A/g, "<br>");
+  return (
+    text
+      // 行頭の半角スペースを &nbsp; に変換
+      .replace(/^[ ]+/gm, (spaces) => "&nbsp;".repeat(spaces.length))
+      // 改行を <br> に変換
+      .replace(/\x0A/g, "<br>")
+  );
 }
 
 function showUserMessage(chatHistoryElem, messageText) {
