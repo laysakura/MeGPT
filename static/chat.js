@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chatHistory.scrollTop = chatHistory.scrollHeight;
 
         // ユーザーのメッセージ・AIの返答をサーバーに保存
-        fetch("/save_conversation", {
+        fetch(`/save_conversation/${botId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
