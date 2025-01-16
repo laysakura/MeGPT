@@ -105,6 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function selectBot(bot) {
+    const noBotSelectedMessage = document.getElementById(
+      "no-bot-selected-message"
+    );
+    const chatContainer = document.getElementById("chat-container");
+    noBotSelectedMessage.style.display = "none";
+    chatContainer.style.display = "block";
+
     const chatHistory = document.getElementById("chat-history");
     ShowConversationHistory(chatHistory, bot.id);
   }

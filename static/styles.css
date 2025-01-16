@@ -144,11 +144,24 @@ body {
     text-decoration: none;
 }
 
+#no-bot-selected-message {
+    background-color: #ffcccc;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ff9999;
+    border-radius: 5px;
+    margin: 10px;
+    display: block;
+}
+
 #chat-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 10px;
+    display: none;
 }
 
 #chat-history {

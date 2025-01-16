@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!message || !botId) {
       console.log(`Message: ${message}, Bot ID: ${botId}`);
+      alert("チャットを開始するには、サイドバーからボットを選択してください。");
       return;
     }
 
