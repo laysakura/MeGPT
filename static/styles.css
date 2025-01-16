@@ -72,13 +72,17 @@ body {
     padding: 10px;
 }
 
-.bot-link {
+.bot-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #f4f4f4;
     border-bottom: 1px solid #ddd;
+}
+
+.bot-link {
+    width: 70%;
 }
 
 .bot-name {
