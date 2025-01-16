@@ -90,7 +90,54 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openBotSettingsModal(bot) {
-    console.log(`Opening settings for bot: ${bot.name}`);
+    const modal = document.getElementById("update-bot-modal");
+    const closeButton = modal.querySelector(".close-button");
+    const submitButton = modal.querySelector(
+      "#update-bot-modal--update-bot-button"
+    );
+    const botName = modal.querySelector("#update-bot-modal--bot-name");
+    const systemPrompt = modal.querySelector(
+      "#update-bot-modal--system-prompt"
+    );
+    const response = modal.querySelector("#update-bot-modal--bot-response");
+
+    modal.style.display = "block";
+
+    closeButton.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    botName.value = bot.name;
+    systemPrompt.value = bot.system_prompt;
+    response.value = bot.response;
+
+    submitButton.addEventListener("click", () => {
+      const updatedName = botName.value.trim();
+      const updatedSystemPrompt = systemPrompt.value.trim();
+      const updatedResponse = response.value.trim();
+
+      fetch(`/update_bot/${bot.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: bot.id,
+          name: updatedName,
+          system_prompt: updatedSystemPrompt,
+          response: updatedResponse,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "Bot updated") {
+            alert("ボットが更新されました");
+            modal.style.display = "none";
+            location.reload(); // ページをリロードして更新を反映
+          }
+        })
+        .catch((error) => ShowError(`Error updating bot: ${error}`));
+    });
   }
 
   function updateSelectedBotElems(bot) {

@@ -64,6 +64,20 @@
       </div>
     </div>
 
+    <div id="update-bot-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>ボット設定</h2>
+        <label for="update-bot-modal--bot-name">ボット名:</label>
+        <input type="text" id="update-bot-modal--bot-name" />
+        <label for="update-bot-modal--system-prompt">システムプロンプト:</label>
+        <input type="text" id="update-bot-modal--system-prompt" />
+        <label for="update-bot-modal--bot-response">ボットの応答:</label>
+        <input type="text" id="update-bot-modal--bot-response" />
+        <button id="update-bot-modal--update-bot-button">ボットを更新</button>
+      </div>
+    </div>
+
     <div id="settings-modal" class="modal">
       <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -79,6 +93,7 @@
         <button id="save-settings-button">設定を保存</button>
       </div>
     </div>
+
     <script type="module" src="/static/util.js"></script>
     <script src="/static/components.js"></script>
     <script type="module" src="/static/sidebar.js"></script>
