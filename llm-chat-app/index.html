@@ -21,11 +21,13 @@
       <div id="selected-bot-info">
         <input type="hidden" id="selected-bot-id" />
         <div id="bot-details">
-          <div id="bot-details-title">
+          <div id="bot-details-title" class="toggle-window-title">
             ボットの詳細: <span id="selected-bot-name"></span>
-            <button id="bot-details-toggle-button">▼</button>
+            <button id="bot-details-toggle-button" class="toggle-window-button">
+              ▼
+            </button>
           </div>
-          <div id="bot-details-content" style="display: none">
+          <div id="bot-details-content" class="toggle-window-content">
             <div id="selected-bot-system-prompt"></div>
             <div id="selected-bot-response"></div>
           </div>

@@ -9,6 +9,36 @@
   margin-bottom: 10px;
 }
 
+.toggle-window-title {
+    background-color: #76b8ff;
+    color: white;
+    margin: 5px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-window-content {
+    display: none;
+    background-color: #f9f9f9;
+    margin: 0 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.toggle-window-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 #add-bot-button:hover {
   background-color: #218838;
 }
