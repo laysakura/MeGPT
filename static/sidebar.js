@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const botSettingsButton = document.createElement("button");
     botSettingsButton.className = "bot-settings-button";
-    botSettingsButton.textContent = "設定";
+    botSettingsButton.innerHTML = '<i class="fas fa-cog"></i>';
     botSettingsButton.addEventListener("click", () => {
       openBotSettingsModal(bot);
     });
