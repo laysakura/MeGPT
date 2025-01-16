@@ -125,6 +125,9 @@ function ShowConversationHistory(chatHistoryElem, botId) {
   fetch(`/get_conversation_history/${botId}`)
     .then((response) => response.json())
     .then((data) => {
+      // 一度チャット履歴を消去
+      chatHistoryElem.innerHTML = "";
+
       const history = data.history;
       for (const conversation of history) {
         showUserMessage(chatHistoryElem, conversation.message.user_input);
