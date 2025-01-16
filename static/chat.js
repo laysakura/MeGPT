@@ -8,13 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit-button");
   const chatHistory = document.getElementById("chat-history");
   const clearHistoryButton = document.getElementById("clear-history-button");
-  const botDetailsLink = document.getElementById("bot-details-link");
+  const botDetailsToggleButton = document.getElementById(
+    "bot-details-toggle-button"
+  );
+  const botDetailsContent = document.getElementById("bot-details-content");
 
   // ボットの詳細表示
-  botDetailsLink.addEventListener("click", () => {
-    const botDetails = document.getElementById("bot-details");
-    botDetails.style.display =
-      botDetails.style.display === "block" ? "none" : "block";
+  botDetailsToggleButton.addEventListener("click", () => {
+    if (botDetailsContent.style.display === "block") {
+      botDetailsContent.style.display = "none";
+      botDetailsToggleButton.textContent = "▼";
+    } else {
+      botDetailsContent.style.display = "block";
+      botDetailsToggleButton.textContent = "▲";
+    }
   });
 
   // 会話を送信するキー・ボタンのイベントリスナーを追加

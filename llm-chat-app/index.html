@@ -20,14 +20,18 @@
       </div>
       <div id="selected-bot-info">
         <input type="hidden" id="selected-bot-id" />
-        <div id="selected-bot-name"></div>
-        <a href="#" id="bot-details-link">詳細</a>
-        <div id="bot-details" style="display: none;">
-          <div id="selected-bot-system-prompt"></div>
-          <div id="selected-bot-response"></div>
+        <div id="bot-details">
+          <div id="bot-details-title">
+            ボットの詳細: <span id="selected-bot-name"></span>
+            <button id="bot-details-toggle-button">▼</button>
+          </div>
+          <div id="bot-details-content" style="display: none">
+            <div id="selected-bot-system-prompt"></div>
+            <div id="selected-bot-response"></div>
+          </div>
         </div>
       </div>
-      
+
       <div id="chat-container">
         <div id="chat-history">
           <!-- 会話履歴がここに表示されます -->
