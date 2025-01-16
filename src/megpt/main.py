@@ -28,6 +28,12 @@ async def update_bot(bot: Bot):
     return JSONResponse(content={"status": "Bot updated"}, status_code=200)
 
 
+@app.post("/delete_bot/{bot_id}")
+async def delete_bot(bot_id: int):
+    Bot.delete_from_db(bot_id)
+    return JSONResponse(content={"status": "Bot deleted"}, status_code=200)
+
+
 @app.get("/get_settings")
 async def get_settings():
     settings = Settings.from_db()

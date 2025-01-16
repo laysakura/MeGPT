@@ -105,8 +105,21 @@ body {
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 5px 10px;
+    padding: 5px 5px;
     cursor: pointer;
+}
+
+.bot-delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 5px;
+    cursor: pointer;
+}
+
+.bot-delete-button:hover {
+    background-color: #c82333;
 }
 
 .bot-settings-button:hover {

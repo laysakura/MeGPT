@@ -81,6 +81,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     botItem.appendChild(botSettingsButton);
 
+    const deleteBotButton = document.createElement("button");
+    deleteBotButton.className = "bot-delete-button";
+    deleteBotButton.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteBotButton.addEventListener("click", () => {
+      if (confirm("このボットを削除してもよろしいですか？")) {
+        fetch(`/delete_bot/${bot.id}`, {
+          method: "POST",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "Bot deleted") {
+              alert("ボットが削除されました");
+              location.reload(); // ページをリロードして削除を反映
+            }
+          })
+          .catch((error) => ShowError(`Error deleting bot: ${error}`));
+      }
+    });
+    botItem.appendChild(deleteBotButton);
+
     botList.appendChild(botItem);
   }
 

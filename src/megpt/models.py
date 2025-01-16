@@ -52,6 +52,13 @@ class Bot(BaseModel):
         conn.close()
         return bot
 
+    @staticmethod
+    def delete_from_db(bot_id: int):
+        conn = get_db_connection()
+        with conn:
+            conn.execute("DELETE FROM bots WHERE id = ?", [bot_id])
+        conn.close()
+
     def get_system_prompt(self) -> Conversation:
         return Conversation(
             message=Message(input_role=InputRoleEnum.SYSTEM, user_input=self.system_prompt), ai_response=self.response
