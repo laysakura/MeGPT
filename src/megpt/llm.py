@@ -10,8 +10,8 @@ class LlmClient:
         )
         self.chat_model = settings.chat_model
 
-    def chat(self, history: ConversationHistory, message: Message) -> Conversation:
-        messages = history.get_openai_messages() + [message.get_openai_message()]
+    def chat(self, system_prompt: Conversation, history: ConversationHistory, message: Message) -> Conversation:
+        messages = system_prompt.get_openai_message() + history.get_openai_messages() + [message.get_openai_message()]
 
         chat_completion = self.client.chat.completions.create(
             messages=messages,

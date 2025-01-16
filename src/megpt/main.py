@@ -11,7 +11,7 @@ app = FastAPI()
 
 @app.get("/get_bots")
 async def get_bots():
-    bots = Bot.from_db()
+    bots = Bot.all_from_db()
     return JSONResponse(content=[bot.dict() for bot in bots], status_code=200)
 
 
@@ -55,10 +55,12 @@ async def save_conversation(bot_id: int, conversation: Conversation):
 
 @app.post("/chat/{bot_id}")
 async def chat(bot_id: int, message: Message):
+    bot = Bot.find_from_db(bot_id)
+    system_prompt = bot.get_system_prompt()
     history = ConversationHistory.from_db(bot_id)
 
     client = LlmClient(Settings.from_db())
-    conversation = client.chat(history, message)
+    conversation = client.chat(system_prompt, history, message)
 
     return JSONResponse(content={"ai_response": conversation.ai_response}, status_code=200)
 

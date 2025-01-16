@@ -11,6 +11,22 @@ class InputRoleEnum(str, enum.Enum):
     SYSTEM = "system"
 
 
+class Message(BaseModel):
+    input_role: InputRoleEnum
+    user_input: str
+
+    def get_openai_message(self) -> dict[str, str]:
+        return {"role": self.input_role, "content": self.user_input}
+
+
+class Conversation(BaseModel):
+    message: Message
+    ai_response: str
+
+    def get_openai_message(self) -> list[dict[str, str]]:
+        return [self.message.get_openai_message(), {"role": "assistant", "content": self.ai_response}]
+
+
 class Bot(BaseModel):
     id: int | None
     name: str
@@ -18,7 +34,7 @@ class Bot(BaseModel):
     response: str
 
     @staticmethod
-    def from_db() -> list["Bot"]:
+    def all_from_db() -> list["Bot"]:
         conn = get_db_connection()
         cursor = conn.execute("SELECT id, name, system_prompt, response FROM bots")
         bots = [
@@ -27,6 +43,19 @@ class Bot(BaseModel):
         ]
         conn.close()
         return bots
+
+    @staticmethod
+    def find_from_db(bot_id: int) -> "Bot":
+        conn = get_db_connection()
+        cursor = conn.execute("SELECT id, name, system_prompt, response FROM bots WHERE id = ?", [bot_id])
+        bot = Bot(**cursor.fetchone())
+        conn.close()
+        return bot
+
+    def get_system_prompt(self) -> Conversation:
+        return Conversation(
+            message=Message(input_role=InputRoleEnum.SYSTEM, user_input=self.system_prompt), ai_response=self.response
+        )
 
     def save(self):
         conn = get_db_connection()
@@ -45,22 +74,6 @@ class Bot(BaseModel):
                 (self.name, self.system_prompt, self.response, self.id),
             )
         conn.close()
-
-
-class Message(BaseModel):
-    input_role: InputRoleEnum
-    user_input: str
-
-    def get_openai_message(self) -> dict[str, str]:
-        return {"role": self.input_role, "content": self.user_input}
-
-
-class Conversation(BaseModel):
-    message: Message
-    ai_response: str
-
-    def get_openai_message(self) -> list[dict[str, str]]:
-        return [self.message.get_openai_message(), {"role": "assistant", "content": self.ai_response}]
 
 
 class Settings(BaseModel):
